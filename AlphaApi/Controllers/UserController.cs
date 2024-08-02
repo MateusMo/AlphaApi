@@ -54,13 +54,20 @@ namespace AlphaApi.Controllers
 
         // Update
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] User user)
+        public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] UpdateUserDto userDto)
         {
-            if (id != user.Id)
+            if(id != userDto.Id)
             {
-                return BadRequest();
+                return BadRequest(new DefaultReturnDto<int>()
+                {
+                    Status = 401,
+                    Message = "Bad Communication",
+                    Data = 0
+                });
             }
-            var updatedUser = await _userService.UpdateUser(user);
+
+            var user = await _userService.GetUserById(id);
+            var updatedUser = await _userService.UpdateUser(UpdateUserDto.ToDto(userDto,user));
             if (updatedUser == null)
             {
                 return NotFound();

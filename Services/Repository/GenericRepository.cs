@@ -29,8 +29,26 @@ namespace Services.Repository
 
         public async Task<T> GetById(int id)
         {
-            return await _dbSet.FindAsync(id);
+            var entity = await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var newEntity = Activator.CreateInstance<T>();
+
+            foreach (var property in typeof(T).GetProperties())
+            {
+                if (property.CanRead && property.CanWrite)
+                {
+                    var value = property.GetValue(entity);
+                    property.SetValue(newEntity, value);
+                }
+            }
+
+            return newEntity;
         }
+
 
         public async Task<IEnumerable<T>> GetAll()
         {
