@@ -27,7 +27,7 @@ namespace Services.Data.Migrations
                 .HasColumnType("int");
 
             builder.Property(x => x.LinkTreeId)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("LinkTreeId")
                 .HasColumnType("int");
 
@@ -40,7 +40,7 @@ namespace Services.Data.Migrations
             builder.Property(x => x.Url)
                 .IsRequired()
                 .HasColumnName("Url")
-                .HasColumnType("NVARCHAR(MAX)");
+                .HasColumnType("NVARCHAR(2000)");
 
             builder.Property(x => x.Clicks)
                     .IsRequired()
@@ -64,7 +64,7 @@ namespace Services.Data.Migrations
                 .HasColumnType("bit");
 
             builder.Property(x => x.Password)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("Password")
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(40);
@@ -75,7 +75,7 @@ namespace Services.Data.Migrations
                     .HasColumnType("bit");
 
             builder.Property(x => x.Message)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("Message")
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(250);
@@ -86,7 +86,7 @@ namespace Services.Data.Migrations
                 .HasColumnType("bit");
 
             builder.Property(x => x.ExpirationDate)
-                .IsRequired()
+                .IsRequired(false)
                 .HasColumnName("ExpirationDate")
                 .HasColumnType("DateTime");
 

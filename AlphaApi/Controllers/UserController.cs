@@ -70,12 +70,17 @@ namespace AlphaApi.Controllers
             var updatedUser = await _userService.UpdateUser(UpdateUserDto.ToDto(userDto,user));
             if (updatedUser == null)
             {
-                return NotFound();
+                return NotFound(new DefaultReturnDto<int>()
+                {
+                    Status = 404,
+                    Message = "The user was not found",
+                    Data = 0
+                });
             }
             return Ok(new DefaultReturnDto<User>()
             {
                 Status = 200,
-                Message = "User successfuly updated",
+                Message = "User successfully updated",
                 Data = updatedUser
             });
         }
@@ -93,7 +98,7 @@ namespace AlphaApi.Controllers
             return Ok(new DefaultReturnDto<User>()
             {
                 Status = 200,
-                Message = "User successfuly deleted",
+                Message = "User successfully deleted",
                 Data = user
             });
         }

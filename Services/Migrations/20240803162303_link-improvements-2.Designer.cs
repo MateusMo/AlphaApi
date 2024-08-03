@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Services.Data;
 
@@ -11,9 +12,11 @@ using Services.Data;
 namespace Services.Migrations
 {
     [DbContext(typeof(AlphaContext))]
-    partial class AlphaContextModelSnapshot : ModelSnapshot
+    [Migration("20240803162303_link-improvements-2")]
+    partial class linkimprovements2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,10 +64,12 @@ namespace Services.Migrations
                         .HasColumnName("IsActive");
 
                     b.Property<int?>("LinkTreeId")
+                        .IsRequired()
                         .HasColumnType("int")
                         .HasColumnName("LinkTreeId");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Message");
@@ -76,6 +81,7 @@ namespace Services.Migrations
                         .HasColumnName("Name");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Password");

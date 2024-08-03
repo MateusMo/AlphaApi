@@ -18,9 +18,9 @@ namespace AlphaApi.Controllers
 
         // Create
         [HttpPost]
-        public async Task<ActionResult<Link>> CreateLink([FromBody] Link Link)
+        public async Task<ActionResult<Link>> CreateLink([FromBody] CreateLinkDto Link)
         {
-            var createdLink = await _LinkService.CreateLink(Link);
+            var createdLink = await _LinkService.CreateLink(CreateLinkDto.ToDto(Link));
             return CreatedAtAction(nameof(GetLinkById), new { id = createdLink.Id }, new DefaultReturnDto<Link>()
             {
                 Status = 200,
@@ -36,9 +36,19 @@ namespace AlphaApi.Controllers
             var Link = await _LinkService.GetLinkById(id);
             if (Link == null)
             {
-                return NotFound();
+                return NotFound(new DefaultReturnDto<int>()
+                {
+                    Status = 404,
+                    Message = "No link was found",
+                    Data = 0
+                });
             }
-            return Ok(Link);
+            return Ok(new DefaultReturnDto<Link>()
+            {
+                Status = 200,
+                Message = "Link Found",
+                Data = Link
+            });
         }
 
         //[HttpGet]
@@ -50,17 +60,31 @@ namespace AlphaApi.Controllers
 
         // Update
         [HttpPut("{id}")]
-        public async Task<ActionResult<Link>> UpdateLink(int id, [FromBody] Link Link)
+        public async Task<ActionResult<Link>> UpdateLink(int id, [FromBody] UpdateLinkDto LinkDto)
         {
-            if (id != Link.Id)
+            if (id != LinkDto.Id)
             {
-                return BadRequest();
+                return BadRequest(new DefaultReturnDto<int>()
+                {
+                    Status = 401,
+                    Message = "Bad Communication",
+                    Data = 0
+                });
             }
-            var updatedLink = await _LinkService.UpdateLink(Link);
+
+            var updatedLink = await _LinkService
+                .UpdateLink(UpdateLinkDto.ToDto(LinkDto, await _LinkService.GetLinkById(id)));
+
             if (updatedLink == null)
             {
-                return NotFound();
+                return NotFound(new DefaultReturnDto<int>()
+                {
+                    Status = 404,
+                    Message = "Not Found",
+                    Data = 0
+                });
             }
+
             return Ok(new DefaultReturnDto<Link>()
             {
                 Status = 200,

@@ -18,9 +18,9 @@ namespace AlphaApi.Controllers
 
         // Create
         [HttpPost]
-        public async Task<ActionResult<LinkTree>> CreateLinkTree([FromBody] LinkTree LinkTree)
+        public async Task<ActionResult<LinkTree>> CreateLinkTree([FromBody] CreateLinkTreeDto LinkTreeDto)
         {
-            var createdLinkTree = await _LinkTreeService.CreateLinkTree(LinkTree);
+            var createdLinkTree = await _LinkTreeService.CreateLinkTree(CreateLinkTreeDto.ToDto(LinkTreeDto));
             return CreatedAtAction(nameof(GetLinkTreeById), new { id = createdLinkTree.Id }, new DefaultReturnDto<LinkTree>()
             {
                 Status = 200,

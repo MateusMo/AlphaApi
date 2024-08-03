@@ -10,15 +10,15 @@ namespace Services.Domain
     {
         public string Url { get; set; }
         public bool IsActive { get; set; }
-        public int Clicks { get; set; }
+        public int Clicks { get; set; } = 0;
         public bool Expires { get; set; } = false;
-        public DateTime ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public bool HasPassword { get; set; } = false;
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
         public bool HasMessage { get; set; } = false;
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
         //Navegação
-        public int LinkTreeId { get; set; }
+        public int? LinkTreeId { get; set; }
         public LinkTree LinkTree { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
