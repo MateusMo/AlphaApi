@@ -50,16 +50,28 @@ namespace AlphaApi.Controllers
 
         // Update
         [HttpPut("{id}")]
-        public async Task<ActionResult<LinkTree>> UpdateLinkTree(int id, [FromBody] LinkTree LinkTree)
+        public async Task<ActionResult<LinkTree>> UpdateLinkTree(int id, [FromBody] UpdateLinkDto LinkTreeDto)
         {
-            if (id != LinkTree.Id)
+            if (id != LinkTreeDto.Id)
             {
-                return BadRequest();
+                return BadRequest(new DefaultReturnDto<int>()
+                {
+                    Status = 401,
+                    Message = "Bad Communication",
+                    Data = 0
+                });
             }
-            var updatedLinkTree = await _LinkTreeService.UpdateLinkTree(LinkTree);
+            
+            var linkTree = await _LinkTreeService.GetLinkTreeById(id);
+            var updatedLinkTree = await _LinkTreeService.UpdateLinkTree(UpdateLinkTreeDto.ToDto(LinkTreeDto,linkTree));
             if (updatedLinkTree == null)
             {
-                return NotFound();
+                return NotFound(new DefaultReturnDto<int>()
+                {
+                    Status = 404,
+                    Message = "Not Found",
+                    Data = 0
+                });
             }
             return Ok(new DefaultReturnDto<LinkTree>()
             {

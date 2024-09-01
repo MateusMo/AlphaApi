@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Services.Data;
+using Services.ExternalServices;
 using Services.Repository;
 using Services.Repository.Repositories;
 using Services.Services;
@@ -20,6 +21,19 @@ builder.Services.AddDbContext<AlphaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200") // Allow your Angular app's origin
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 /***********************************************************************************************/
 //Aplication Services
 builder.Services.AddScoped<IUserService,UserService>();
@@ -27,6 +41,8 @@ builder.Services.AddScoped<ILinkService, LinkService>();
 builder.Services.AddScoped<ILinkTreeService, LinkTreeService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+//External Services
+builder.Services.AddScoped<ISmtp, Smtp>();
 
 /***********************************************************************************************/
 
@@ -72,6 +88,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthorization();
 

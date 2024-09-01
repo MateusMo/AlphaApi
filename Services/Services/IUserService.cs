@@ -1,4 +1,5 @@
 ﻿using Services.Domain;
+using Services.ServiceDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace Services.Services
 {
     public interface IUserService
     {
-        Task<User> CreateUser(User user);
+        Task<DefaultServiceReturnDto<User>> CreateUser(User user);
+        Task<DefaultServiceReturnDto<bool>> IsActive(User user);
         Task<User> GetUserById(int id);
         Task<IEnumerable<User>> GetAllUsers();
         Task<User> UpdateUser(User user);

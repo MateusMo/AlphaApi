@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Services.ServiceDto;
 
 namespace Services.Services
 {
@@ -20,12 +21,17 @@ namespace Services.Services
             _configuration = configuration;
         }
 
-        public async Task<string> AuthenticateAsync(string email, string password)
+        public async Task<DefaultServiceReturnDto<string>> AuthenticateAsync(string email, string password)
         {
             var user = await _loginRepository.GetUserByEmailAndPasswordAsync(email, password);
             if (user == null)
             {
-                return null;
+                return new DefaultServiceReturnDto<string>()
+                {
+                    Status = 409,
+                    Message = "Incorrect email or password",
+                    Data = ""
+                };
             }
 
             // Generate JWT token
@@ -38,7 +44,12 @@ namespace Services.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return new DefaultServiceReturnDto<string>()
+            {
+                Status = 200,
+                Message = "Loggin authorized",
+                Data = tokenHandler.WriteToken(token)
+            };
         }
     }
 }

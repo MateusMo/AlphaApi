@@ -24,13 +24,36 @@ namespace AlphaApi.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser([FromBody] CreateUserDto user)
         {
-            var createdUser = await _userService.CreateUser(CreateUserDto.ToDto(user));
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, new DefaultReturnDto<User>()
+            try
             {
-                Status = 200,
-                Message = "User successfully created",
-                Data = createdUser
-            });
+                var createdUser = await _userService.CreateUser(CreateUserDto.ToDto(user));
+
+                if(createdUser.Status == 500)
+                {
+                    return Ok(new DefaultReturnDto<int>()
+                    {
+                        Status = 500,
+                        Message = createdUser.Message,
+                        Data = 0
+                    });
+                }
+
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Data.Id }, new DefaultReturnDto<User>()
+                {
+                    Status = 201,
+                    Message = createdUser.Message,
+                    Data = createdUser.Data 
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,new DefaultReturnDto<int>()
+                {
+                    Status = 500,
+                    Message = "Internal Error",
+                    Data = 0
+                });
+            }
         }
 
         // Read

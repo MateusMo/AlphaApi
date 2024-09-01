@@ -44,6 +44,7 @@ namespace AlphaApi.Dto
                 Password = userDto.Password,
                 Description = userDto.Description,
                 Photo = userDto.Photo,
+                RecoverAccessGuid = Guid.NewGuid(),
                 Title = userDto.Title,
             };
         }

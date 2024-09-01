@@ -27,19 +27,28 @@ namespace AlphaApi.Controllers
             try
             {
                 var result = await _loginService.AuthenticateAsync(loginDto.Email, loginDto.Password);
-                if (result == null)
+                if (result.Status != 200)
                 {
-                    return NotFound(DefaultReturnDto<int>.ToDto(401, "User not found", 0));
+                    return NotFound(DefaultReturnDto<Dictionary<string, object>>.ToDto(result.Status, result.Message, new Dictionary<string, object>
+                    {
+                        { "Data", result.Data },
+                    }));
                 }
-                var user = await _userService.GetUserByField("Password", loginDto.Password);
-                if (user == null)
+
+                var user = await _userService.GetUserByField("Email", loginDto.Email);
+                var isActive = await _userService.IsActive(user);
+
+                if (!isActive.Data)
                 {
-                    return NotFound(DefaultReturnDto<int>.ToDto(401, "User not found", 0));
+                    return NotFound(DefaultReturnDto<Dictionary<string, object>>.ToDto(isActive.Status, isActive.Message, new Dictionary<string, object>
+                    {
+                        { "Data", result.Data },
+                    }));
                 }
 
                 return Ok(DefaultReturnDto<Dictionary<string, object>>.ToDto(200, "Logged", new Dictionary<string, object>
                 {
-                    { "Token", result },
+                    { "Token", result.Data },
                     { "User", user }
                 }));
             }

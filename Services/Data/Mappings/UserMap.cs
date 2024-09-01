@@ -28,6 +28,12 @@ namespace Services.Data.Migrations
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(255);
 
+            builder.Property(x => x.RecoverAccessGuid)
+                .IsRequired()
+                .HasColumnName("RecoverAccessGuid")
+                .HasColumnType("UNIQUEIDENTIFIER")
+                .HasMaxLength(255);
+
             builder.Property(x => x.Password)
                 .IsRequired()
                 .HasColumnName("Password")

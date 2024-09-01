@@ -18,9 +18,9 @@ namespace AlphaApi.Controllers
 
         // Create
         [HttpPost]
-        public async Task<ActionResult<Post>> CreatePost([FromBody] Post Post)
+        public async Task<ActionResult<Post>> CreatePost([FromBody] CreatePostDto PostDto)
         {
-            var createdPost = await _PostService.CreatePost(Post);
+            var createdPost = await _PostService.CreatePost(CreatePostDto.ToDto(PostDto));
             return CreatedAtAction(nameof(GetPostById), new { id = createdPost.Id }, new DefaultReturnDto<Post>()
             {
                 Status = 200,
@@ -49,25 +49,25 @@ namespace AlphaApi.Controllers
         //}
 
         // Update
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Post>> UpdatePost(int id, [FromBody] Post Post)
-        {
-            if (id != Post.Id)
-            {
-                return BadRequest();
-            }
-            var updatedPost = await _PostService.UpdatePost(Post);
-            if (updatedPost == null)
-            {
-                return NotFound();
-            }
-            return Ok(new DefaultReturnDto<Post>()
-            {
-                Status = 200,
-                Message = "Post successfuly updated",
-                Data = updatedPost
-            });
-        }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult<Post>> UpdatePost(int id, [FromBody] Post Post)
+        //{
+        //    if (id != Post.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    var updatedPost = await _PostService.UpdatePost(Post);
+        //    if (updatedPost == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(new DefaultReturnDto<Post>()
+        //    {
+        //        Status = 200,
+        //        Message = "Post successfuly updated",
+        //        Data = updatedPost
+        //    });
+        //}
 
         // Delete
         [HttpDelete("{id}")]

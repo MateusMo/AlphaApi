@@ -12,9 +12,10 @@ namespace Services.Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public Guid RecoverAccessGuid { get; set; }
         public  string Password { get; set; }
         public bool IsPremium { get; set; } = false;
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
         public int Photo { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
