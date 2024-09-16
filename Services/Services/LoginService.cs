@@ -13,12 +13,14 @@ namespace Services.Services
     public class LoginService : ILoginService
     {
         private readonly ILoginRepository _loginRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
 
-        public LoginService(ILoginRepository loginRepository, IConfiguration configuration)
+        public LoginService(ILoginRepository loginRepository, IConfiguration configuration,IUserRepository userRepository)
         {
             _loginRepository = loginRepository;
             _configuration = configuration;
+            _userRepository = userRepository;
         }
 
         public async Task<DefaultServiceReturnDto<string>> AuthenticateAsync(string email, string password)
@@ -30,6 +32,16 @@ namespace Services.Services
                 {
                     Status = 409,
                     Message = "Incorrect email or password",
+                    Data = ""
+                };
+            }
+
+            if (!user.IsActive)
+            {
+                return new DefaultServiceReturnDto<string>()
+                {
+                    Status = 403,
+                    Message = "User is not active",
                     Data = ""
                 };
             }

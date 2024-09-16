@@ -31,7 +31,7 @@ namespace AlphaApi.Controllers
                 {
                     return NotFound(DefaultReturnDto<Dictionary<string, object>>.ToDto(result.Status, result.Message, new Dictionary<string, object>
                     {
-                        { "Data", result.Data },
+                        { "Data", result },
                     }));
                 }
 
@@ -49,7 +49,7 @@ namespace AlphaApi.Controllers
                 return Ok(DefaultReturnDto<Dictionary<string, object>>.ToDto(200, "Logged", new Dictionary<string, object>
                 {
                     { "Token", result.Data },
-                    { "User", user }
+                    { "Data", user }
                 }));
             }
             catch (Exception ex)
